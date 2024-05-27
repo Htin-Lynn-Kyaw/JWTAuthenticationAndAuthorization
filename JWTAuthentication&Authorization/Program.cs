@@ -1,7 +1,16 @@
+using JWTAuthentication_Authorization.Database;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using JWTAuthentication_Authorization.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefultConnections")));
+
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<AppDbContext>();
 
 var app = builder.Build();
 
@@ -19,6 +28,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapRazorPages(); // To implement razor pages form identity framewrok
 
 app.MapControllerRoute(
     name: "default",

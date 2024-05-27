@@ -1,4 +1,5 @@
 ﻿using JWTAuthentication_Authorization.Models;
+using JWTAuthentication_Authorization.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -15,6 +16,10 @@ namespace JWTAuthentication_Authorization.Controllers
 
         public IActionResult Index()
         {
+            //ApplicationUser user = new ApplicationUser();
+            //AuthService auth = new AuthService();
+            //var JwtToken = auth.GenerateToken(user);
+            //TempData["Token"] = JwtToken;
             return View();
         }
 
