@@ -27,9 +27,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
 
-app.UseAuthentication();
+app.MapControllers(); // API
 
 app.MapRazorPages(); // To implement razor pages form identity framewrok
 

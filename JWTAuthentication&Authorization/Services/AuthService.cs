@@ -34,8 +34,8 @@ namespace JWTAuthentication_Authorization.Services
         private ClaimsIdentity GenerateClaims(ApplicationUser user)
         {
             var claims = new ClaimsIdentity();
-            //claims.AddClaim(new Claim(ClaimTypes.Name, user.Email));
-
+            claims.AddClaim(new Claim(ClaimTypes.Name, user.Email!));
+            claims.AddClaim(new Claim(ClaimTypes.GivenName, user.UserName!));
             return claims;
         }
     }

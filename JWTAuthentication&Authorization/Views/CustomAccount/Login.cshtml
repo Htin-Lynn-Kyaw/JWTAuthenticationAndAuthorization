@@ -1,25 +1,115 @@
-﻿@model LoginModel
+﻿@model LoginViewModel
 
-<form asp-controller="CustomAccount" asp-action="CustomLogin">
+<div class="row">
+    <div class="col-lg-6 mx-auto rounded border p-4">
+        <section>
+            <h2 class="text-center">Log In</h2>
+            <hr />
+            <div class="text-danger" role="alert">@Html.ValidationSummary(true, "", new { @class = "text-danger" })</div>
+            <form id="loginForm" action="/CustomAccount/CustomLogin" method="post">
+                <div class="form-floating mb-3">
+                    <input type="email" id="email" name="email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" required>
+                    <label for="email" class="form-label">Email</label>
+                    @* <span class="text-danger">@Html.ValidationMessageFor(m => m.Input.Email)</span> *@
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="password" id="password" name="password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" required>
+                    <label for="password" class="form-label">Password</label>
+                    @* <span class="text-danger">@Html.ValidationMessageFor(m => m.Input.Password)</span> *@
+                </div>
+                <div class="checkbox mb-3">
+                    <label class="form-label">
+                        <input type="checkbox" id="rememberMe" name="rememberMe" class="form-check-input">
+                        Remember Me
+                    </label>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+                    </div>
+                    <div class="col-6">
+                        <a class="w-100 btn btn-lg btn-outline-primary" href="/" role="button">Cancel</a>
+                    </div>
+                </div>
+                <div>
+                    <p>
+                        @* <a class="btn btn-link" id="forgot-password" href="@Url.Action("ForgotPassword", "Account")" >Forgot your password?</a> *@
+                        <a class="btn btn-link" id="forgot-password" href="/Identity/Account/ForgotPassword">Forgot your password?</a>
+                    </p>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+
+
+@* @model LoginModel
+
+<form id="loginForm" method="post">
     <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" class="form-control" required>
     </div>
     <div class="form-group">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" class="form-control" required>
     </div>
-    <div class="form-group">
-        <div class="form-check">
-            <input asp-for="RememberMe" class="form-check-input" />
-            <label asp-for="RememberMe" class="form-check-label"></label>
-        </div>
+    <div class="form-group form-check">
+        <input type="checkbox" id="rememberMe" name="rememberMe" class="form-check-input">
+        <label class="form-check-label" for="rememberMe">Remember Me</label>
     </div>
     <button type="submit" class="btn btn-primary">Login</button>
 </form>
 
 <div>
-    @* <a href="@Url.Action("ForgotPassword", "Account")>Forgot your password?</a> *@
-</div>
+    <a href="@Url.Action("ForgotPassword", "Account")>Forgot your password?</a>
+</div> *@
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const rememberMeCheckbox = document.getElementById("rememberMe");
+        const data = {
+            email: formData.get("email"),
+            password: formData.get("password"),
+            rememberMe: rememberMeCheckbox.checked
+        };
+
+        try {
+            const response = await fetch("/api/Security/CustomLogin", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                localStorage.setItem("jwtToken", result.token);
+
+                console.log(result.token);
+                // Redirect to the home page or dashboard
+                window.location.href = "/";
+            } else {
+                const error = await response.json();
+                if (response.status === 401) {
+                    // Handle two-factor authentication
+                    alert("Two-factor authentication required.");
+                    window.location.href = error.redirectUrl;
+                } else if (response.status === 403) {
+                    // Handle account locked out
+                    alert("User account locked out.");
+                    window.location.href = error.redirectUrl;
+                } else {
+                    // Handle invalid login attempt
+                    alert(error.message);
+                }
+            }
+        } catch (error) {
+            console.error("An error occurred:", error);
+        }
+    });
+</script>

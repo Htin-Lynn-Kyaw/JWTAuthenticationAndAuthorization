@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-public class LoginModel
+public class LoginViewModel
 {
     [Required]
     [EmailAddress]
@@ -12,3 +12,5 @@ public class LoginModel
 
     public bool RememberMe { get; set; } // Optional, if you want to support "Remember Me" functionality
 }
+
+
