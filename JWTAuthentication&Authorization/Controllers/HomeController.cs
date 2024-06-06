@@ -21,6 +21,7 @@ namespace JWTAuthentication_Authorization.Controllers
             return View();
         }
 
+        [Authorize]
         public IActionResult Privacy()
         {
             return View();

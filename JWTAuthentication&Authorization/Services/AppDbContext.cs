@@ -22,7 +22,10 @@ namespace JWTAuthentication_Authorization.Database
             var client = new IdentityRole("client");
             client.NormalizedName = "Client";
 
-            builder.Entity<IdentityRole>().HasData(admin, client);
+            var seller = new IdentityRole("seller");
+            seller.NormalizedName = "Seller";
+
+            builder.Entity<IdentityRole>().HasData(admin, client, seller);
         }
     }
 }
