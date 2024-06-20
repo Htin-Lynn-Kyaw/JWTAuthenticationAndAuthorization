@@ -37,6 +37,7 @@ public class SecurityController : ControllerBase
         }
 
         var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+        bool a =_signInManager.IsSignedIn(User);
         if (result.Succeeded)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);

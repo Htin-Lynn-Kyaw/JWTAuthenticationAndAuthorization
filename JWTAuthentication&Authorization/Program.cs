@@ -13,11 +13,12 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(buil
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<AppDbContext>();
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-        .AddCookie(options =>
-        {
-            options.LoginPath = "/CustomAccount/Login"; // Set your login path
-        });
+//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+//        .AddCookie(options =>
+//        {
+//            options.LoginPath = "/CustomAccount/Login"; // Set your login path
+//        });
+//builder.Services.AddAuthentication(x => x.RequireAuthenticatedSignIn =  true).AddJwtBearer;
 
 builder.Services.AddAuthorization();
 
